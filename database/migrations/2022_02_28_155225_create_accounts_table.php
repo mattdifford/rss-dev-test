@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('country');
             $table->string('post_code');
             $table->string('phone');
-
+            $table->unsignedBigInteger('owner_id');
+            $table->foreign('owner_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

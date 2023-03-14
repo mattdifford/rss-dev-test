@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,7 +23,8 @@ class AccountFactory extends Factory
             'town_city' => $this->faker->city(),
             'country' => $this->faker->country(),
             'post_code' => $this->faker->postcode(),
-            'phone' => $this->faker->phoneNumber()
+            'phone' => $this->faker->phoneNumber(),
+            'owner_id' => User::all()->random(1)->first()->pluck('id')[0]
         ];
     }
 }

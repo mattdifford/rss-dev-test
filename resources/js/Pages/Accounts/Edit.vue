@@ -20,6 +20,7 @@
                                         type="text"
                                         id="name"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="account.name"
                                     >
                                 </div>
 
@@ -28,8 +29,9 @@
                                     <select
                                         id="owner"
                                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        v-model="account.owner_id"
                                     >
-                                        <option></option>
+                                        <option v-for="owner in owners" :value="owner.id">{{owner.name}}</option>
                                     </select>
                                 </div>
 
@@ -39,6 +41,7 @@
                                         type="tel"
                                         id="phone"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="account.phone"
                                     >
                                 </div>
 
@@ -48,6 +51,7 @@
                                         type="text"
                                         id="country"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="account.country"
                                     >
                                 </div>
 
@@ -57,6 +61,7 @@
                                         type="text"
                                         id="address"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="account.address"
                                     >
                                 </div>
 
@@ -66,6 +71,7 @@
                                         type="text"
                                         id="city"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="account.town_city"
                                     >
                                 </div>
 
@@ -75,19 +81,21 @@
                                         type="text"
                                         id="post-code"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="account.post_code"
                                     >
                                 </div>
                             </div>
                             <div class="flex justify-between mt-6">
                                 <button
                                     type="button"
+                                    v-on:click="destroy(account)"
                                     class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                 >
                                     Delete
                                 </button>
                                 <div>
                                     <InertiaLink :href="route('accounts.index')" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cancel</InertiaLink>
-                                    <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+                                    <button v-on:click="update(account)" type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
                                 </div>
                             </div>
                         </form>
@@ -101,6 +109,17 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import {InertiaLink, Head} from '@inertiajs/inertia-vue3'
+import { Inertia } from "@inertiajs/inertia";
 
 const form = '' // placeholder value
+defineProps({account: Object, owners: Object});
+function destroy(account) {
+    if (confirm("Are you sure you want to delete this account?")) {
+        Inertia.delete(route("accounts.destroy", {account:account}));
+    }
+}
+
+function update(account) {
+    Inertia.post(route("accounts.update", {account:account}));
+}
 </script>

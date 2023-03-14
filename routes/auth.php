@@ -8,7 +8,11 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+use Illuminate\Foundation\Application;
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -32,6 +36,14 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
                 ->name('password.update');
+    Route::get('/', function () {
+        return Inertia::render('Welcome', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+        ]);
+    });
 });
 
 Route::middleware('auth')->group(function () {
@@ -53,4 +65,37 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
+    Route::get('dashboard', function() {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    Route::get('contacts', [ContactController::class, 'index'])
+        ->name('contacts.index');
+    Route::post('contacts', [ContactController::class, 'store'])
+        ->name('contacts.store');
+    Route::get('contacts/create', [ContactController::class, 'create'])
+        ->name('contacts.create');
+    Route::get('contacts/{contact}/edit', [ContactController::class, 'edit'])
+        ->name('contacts.edit');
+    Route::get('contacts/{contact}', [ContactController::class, 'show'])
+        ->name('contacts.show');
+    Route::put('contacts/{contact}', [ContactController::class, 'update'])
+        ->name('contacts.update');
+    Route::delete('contacts/{contact}', [ContactController::class, 'destroy'])
+        ->name('contacts.destroy');
+
+    Route::get('accounts', [AccountController::class, 'index'])
+        ->name('accounts.index');
+    Route::post('accounts', [AccountController::class, 'store'])
+        ->name('accounts.store');
+    Route::get('accounts/create', [AccountController::class, 'create'])
+        ->name('accounts.create');
+    Route::get('accounts/{account}/edit', [AccountController::class, 'edit'])
+        ->name('accounts.edit');
+    Route::get('accounts/{account}', [AccountController::class, 'show'])
+        ->name('accounts.show');
+    Route::put('accounts/{account}', [AccountController::class, 'update'])
+        ->name('accounts.update');
+    Route::delete('accounts/{account}', [AccountController::class, 'destroy'])
+        ->name('accounts.destroy');
 });

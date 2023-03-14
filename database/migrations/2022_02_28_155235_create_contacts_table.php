@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone');
             $table->string('position');
-
+            $table->unsignedBigInteger('account_id');
+            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
             $table->timestamps();
         });
     }
