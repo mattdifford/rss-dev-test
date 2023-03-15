@@ -123,7 +123,7 @@ defineProps({ contact: Object, accounts: Object });
 
 function destroy(contact) {
     if (confirm("Are you sure you want to delete this contact?")) {
-        Inertia.delete(route("contacts.destroy", {contact:contact}));
+        Inertia.delete(route("contacts.destroy", {contact:contact.id}));
     }
 }
 

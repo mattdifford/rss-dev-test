@@ -49,6 +49,7 @@ class AccountController extends Controller
     public function update(Request $request)
     {
         $account = Account::where('id', $request->route('account'))->firstorfail();
+
         return Redirect::route('accounts.index');
     }
 

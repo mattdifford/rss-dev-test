@@ -115,11 +115,11 @@ const form = '' // placeholder value
 defineProps({account: Object, owners: Object});
 function destroy(account) {
     if (confirm("Are you sure you want to delete this account?")) {
-        Inertia.delete(route("accounts.destroy", {account:account}));
+        Inertia.delete(route("accounts.destroy", {account:account.id}));
     }
 }
 
 function update(account) {
-    Inertia.post(route("accounts.update", {account:account}));
+    Inertia.put(route("accounts.update", {account:account}));
 }
 </script>
