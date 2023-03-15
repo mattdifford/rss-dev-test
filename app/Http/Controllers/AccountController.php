@@ -28,11 +28,21 @@ class AccountController extends Controller
 
     public function create()
     {
-        return Inertia::render('Accounts/Create', []);
+        return Inertia::render('Accounts/Create', ['owners' => User::all()]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
+        Account::create([
+            'name' => $request->name,
+            'owner_id' => $request->owner_id,
+            'phone' => $request->phone,
+            'country' => $request->country,
+            'address' => $request->address,
+            'town_city' => $request->town_city,
+            'post_code' => $request->post_code,
+        ]);
+        return Redirect::route('accounts.index');
     }
 
     public function edit(Request $request)
@@ -49,7 +59,15 @@ class AccountController extends Controller
     public function update(Request $request)
     {
         $account = Account::where('id', $request->route('account'))->firstorfail();
-
+        $account->update([
+            'name' => $request->name,
+            'owner_id' => $request->owner_id,
+            'phone' => $request->phone,
+            'country' => $request->country,
+            'address' => $request->address,
+            'town_city' => $request->town_city,
+            'post_code' => $request->post_code,
+        ]);
         return Redirect::route('accounts.index');
     }
 

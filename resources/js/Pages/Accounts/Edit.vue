@@ -8,11 +8,11 @@
                     <div class="md:col-span-1">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">Account Information</h3>
                         <ul class="mt-6">
-                            <li class="text-red-500" v-for="error in form.errors">{{ error }}</li>
+                            <li class="text-red-500" v-for="error in errors">{{ error }}</li>
                         </ul>
                     </div>
                     <div class="mt-5 md:mt-0 md:col-span-2">
-                        <form>
+                        <form @submit.prevent="submit">
                             <div class="grid grid-cols-6 gap-6">
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
@@ -20,7 +20,7 @@
                                         type="text"
                                         id="name"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        v-model="account.name"
+                                        v-model="form.name"
                                     >
                                 </div>
 
@@ -29,9 +29,9 @@
                                     <select
                                         id="owner"
                                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                        v-model="account.owner_id"
+                                        v-model="form.owner_id"
                                     >
-                                        <option v-for="owner in owners" :value="owner.id">{{owner.name}}</option>
+                                        <option v-for="owner in owners" :value="owner.id">{{ owner.name }}</option>
                                     </select>
                                 </div>
 
@@ -41,7 +41,7 @@
                                         type="tel"
                                         id="phone"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        v-model="account.phone"
+                                        v-model="form.phone"
                                     >
                                 </div>
 
@@ -51,7 +51,7 @@
                                         type="text"
                                         id="country"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        v-model="account.country"
+                                        v-model="form.country"
                                     >
                                 </div>
 
@@ -61,7 +61,7 @@
                                         type="text"
                                         id="address"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        v-model="account.address"
+                                        v-model="form.address"
                                     >
                                 </div>
 
@@ -71,17 +71,18 @@
                                         type="text"
                                         id="city"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        v-model="account.town_city"
+                                        v-model="form.town_city"
                                     >
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                                    <label for="post-code" class="block text-sm font-medium text-gray-700">Post code</label>
+                                    <label for="post-code" class="block text-sm font-medium text-gray-700">Post
+                                                                                                           code</label>
                                     <input
                                         type="text"
                                         id="post-code"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        v-model="account.post_code"
+                                        v-model="form.post_code"
                                     >
                                 </div>
                             </div>
@@ -94,8 +95,17 @@
                                     Delete
                                 </button>
                                 <div>
-                                    <InertiaLink :href="route('accounts.index')" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cancel</InertiaLink>
-                                    <button v-on:click="update(account)" type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+                                    <InertiaLink
+                                        :href="route('accounts.index')"
+                                        class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    >Cancel
+                                    </InertiaLink>
+                                    <button
+                                        v-on:click="update(account)"
+                                        type="submit"
+                                        class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    >Save
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -108,18 +118,29 @@
 
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
-import {InertiaLink, Head} from '@inertiajs/inertia-vue3'
+import { InertiaLink, Head, useForm } from '@inertiajs/inertia-vue3'
 import { Inertia } from "@inertiajs/inertia";
+const props = defineProps({ account: Object, owners: Object });
 
-const form = '' // placeholder value
-defineProps({account: Object, owners: Object});
+const form = useForm({
+    name: props.account.name,
+    owner_id: props.account.owner_id,
+    phone: props.account.phone,
+    country: props.account.country,
+    address: props.account.address,
+    town_city: props.account.town_city,
+    post_code: props.account.post_code
+})
+
 function destroy(account) {
     if (confirm("Are you sure you want to delete this account?")) {
-        Inertia.delete(route("accounts.destroy", {account:account.id}));
+        Inertia.delete(`/accounts/${props.account.id}`);
     }
+}``
+
+function submit() {
+    form.put(`/accounts/${props.account.id}`)
 }
 
-function update(account) {
-    Inertia.put(route("accounts.update", {account:account}));
-}
+
 </script>

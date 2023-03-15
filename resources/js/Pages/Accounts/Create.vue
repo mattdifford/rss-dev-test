@@ -12,7 +12,7 @@
                         </ul>
                     </div>
                     <div class="mt-5 md:mt-0 md:col-span-2">
-                        <form>
+                        <form @submit.prevent="submit">
                             <div class="grid grid-cols-6 gap-6">
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
@@ -20,6 +20,7 @@
                                         type="text"
                                         id="name"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="form.name"
                                     >
                                 </div>
 
@@ -28,8 +29,9 @@
                                     <select
                                         id="owner"
                                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        v-model="form.owner_id"
                                     >
-                                        <option></option>
+                                        <option v-for="owner in owners" :value="owner.id">{{ owner.name }}</option>
                                     </select>
                                 </div>
 
@@ -39,6 +41,7 @@
                                         type="tel"
                                         id="phone"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="form.phone"
                                     >
                                 </div>
 
@@ -48,6 +51,7 @@
                                         type="text"
                                         id="country"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="form.country"
                                     >
                                 </div>
 
@@ -57,6 +61,7 @@
                                         type="text"
                                         id="address"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="form.address"
                                     >
                                 </div>
 
@@ -66,15 +71,18 @@
                                         type="text"
                                         id="city"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="form.town_city"
                                     >
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                                    <label for="post-code" class="block text-sm font-medium text-gray-700">Post code</label>
+                                    <label for="post-code" class="block text-sm font-medium text-gray-700">Post
+                                                                                                           code</label>
                                     <input
                                         type="text"
                                         id="post-code"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="form.post_code"
                                     >
                                 </div>
                             </div>
@@ -92,7 +100,22 @@
 
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
-import {InertiaLink, Head} from '@inertiajs/inertia-vue3'
+import { InertiaLink, Head, useForm } from '@inertiajs/inertia-vue3'
+import { Inertia } from "@inertiajs/inertia";
 
-const form = '' // placeholder value
+const props = defineProps({ account: Object, owners: Object });
+
+const form = useForm({
+    name: '',
+    owner_id: '',
+    phone: '',
+    country: '',
+    address: '',
+    town_city: '',
+    post_code: '',
+})
+
+function submit() {
+    form.post(`/accounts`)
+}
 </script>

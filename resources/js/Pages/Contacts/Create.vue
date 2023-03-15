@@ -1,5 +1,5 @@
 <template>
-    <Head title="Create Account" />
+    <Head title="Create Contact" />
 
     <BreezeAuthenticatedLayout>
         <div class="max-w-screen-lg mx-auto my-6 space-y-6">
@@ -12,23 +12,27 @@
                         </ul>
                     </div>
                     <div class="mt-5 md:mt-0 md:col-span-2">
-                        <form>
+                        <form @submit.prevent="submit">
                             <div class="grid grid-cols-6 gap-6">
                                 <div class="col-span-6 sm:col-span-3">
-                                    <label for="first-name" class="block text-sm font-medium text-gray-700">First Name</label>
+                                    <label for="first-name" class="block text-sm font-medium text-gray-700">First
+                                                                                                            Name</label>
                                     <input
                                         type="text"
                                         id="first-name"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="form.first_name"
                                     >
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <label for="last-name" class="block text-sm font-medium text-gray-700">Last Name</label>
+                                    <label for="last-name" class="block text-sm font-medium text-gray-700">Last
+                                                                                                           Name</label>
                                     <input
                                         type="text"
                                         id="last-name"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="form.last_name"
                                     >
                                 </div>
 
@@ -38,6 +42,7 @@
                                         type="email"
                                         id="email"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="form.email"
                                     >
                                 </div>
 
@@ -47,15 +52,20 @@
                                         type="tel"
                                         id="phone"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="form.phone"
                                     >
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <label for="position" class="block text-sm font-medium text-gray-700">First Name</label>
+                                    <label
+                                        for="position"
+                                        class="block text-sm font-medium text-gray-700"
+                                    >Position</label>
                                     <input
                                         type="text"
                                         id="position"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="form.position"
                                     >
                                 </div>
 
@@ -64,8 +74,10 @@
                                     <select
                                         id="account"
                                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        v-model="form.account_id"
                                     >
-                                        <option></option>
+                                        <option v-for="account in accounts" :value="account.id">{{ account.name }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -82,8 +94,21 @@
 </template>
 
 <script setup>
-import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
-import {InertiaLink, Head} from '@inertiajs/inertia-vue3'
+import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import { InertiaLink, Head, useForm } from '@inertiajs/inertia-vue3';
+const props = defineProps({ contact: Object, accounts: Object });
 
-const form = '' // placeholder value
+const form = useForm({
+    first_name: '',
+    last_name: '',
+    phone: '',
+    email: '',
+    position: '',
+    account_id: '',
+})
+
+
+function submit() {
+    form.post(`/contacts`)
+}
 </script>

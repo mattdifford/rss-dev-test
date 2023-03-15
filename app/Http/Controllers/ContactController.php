@@ -27,10 +27,20 @@ class ContactController extends Controller
 
     public function create()
     {
+        return Inertia::render('Contacts/Create', ['accounts' => Account::all()]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
+        Contact::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'position' => $request->position,
+            'account_id' => $request->account_id,
+        ]);
+        return Redirect::route('contacts.index');
     }
 
     public function edit(Request $request)
@@ -42,8 +52,18 @@ class ContactController extends Controller
         ]);
     }
 
-    public function update()
+    public function update(Request $request)
     {
+        $account = Contact::where('id', $request->route('contact'))->firstorfail();
+        $account->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'position' => $request->position,
+            'account_id' => $request->account_id,
+        ]);
+        return Redirect::route('contacts.index');
     }
 
     public function destroy(Request $request)
